@@ -1,6 +1,6 @@
 # Ponto de entrada da aplicação Flask
 
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, send_from_directory
 from downloader import download_twitter_video
 import os
 
@@ -17,6 +17,11 @@ def index():
             return render_template("index.html", result=f"Erro: {e}")
     return render_template("index.html", result=None)
 
-if __name__ == "__main__": 
-    port = int(os.environ.get("PORT", 5000)) 
+# Rota para servir o ads.txt (fora da função index)
+@app.route('/ads.txt')
+def ads():
+    return send_from_directory('.', 'ads.txt')
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
