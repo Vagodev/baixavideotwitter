@@ -1,68 +1,21 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Baixa Vídeo — YouTube e X/Twitter</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-  <main class="container py-5" style="max-width: 760px">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4 p-md-5">
-        <h1 class="h3 text-center mb-2">Baixa Vídeo</h1>
-        <p class="text-secondary text-center mb-4">YouTube, Shorts e X/Twitter</p>
-
-        <form method="POST" action="/" id="download-form">
-          <div class="mb-3">
-            <label for="url" class="form-label">Link do vídeo</label>
-            <input id="url" name="url" type="url" class="form-control"
-                   placeholder="Cole o link do YouTube ou X/Twitter"
-                   value="{{ url or '' }}" required maxlength="2048">
-          </div>
-
-          <div class="row g-3">
-            <div class="col-sm-8">
-              <label for="quality" class="form-label">Resolução do vídeo</label>
-              <select id="quality" name="quality" class="form-select" required>
-                <option value="" {% if not selected_quality %}selected{% endif %} disabled>Escolha a resolução desejada</option>
-                {% for item in qualities %}
-                <option value="{{ item.value }}" {% if item.value == selected_quality %}selected{% endif %}>
-                  {{ item.label }}
-                </option>
-                {% endfor %}
-              </select>
-              <div class="form-text">Escolha a resolução desejada. Se ela não estiver disponível, será usada a melhor opção abaixo dela. “Melhor disponível” tenta obter a maior qualidade oferecida.</div>
-            </div>
-            <div class="col-sm-4">
-              <label for="format" class="form-label">Formato</label>
-              <select id="format" name="format" class="form-select">
-                <option value="mp4" selected>MP4</option>
-              </select>
-            </div>
-          </div>
-
-          <button class="btn btn-primary w-100 mt-4" type="submit" id="submit-button">
-            Baixar vídeo
-          </button>
-          <p class="small text-secondary mt-3 mb-0">
-            Baixe somente conteúdo que você tem autorização para salvar. A disponibilidade
-            depende da plataforma e dos formatos oferecidos para cada vídeo.
-          </p>
-        </form>
-
-        {% if result %}
-        <div class="alert alert-danger mt-4 mb-0" role="alert">{{ result }}</div>
-        {% endif %}
-      </div>
-    </div>
-  </main>
-  <script>
-    document.getElementById("download-form").addEventListener("submit", function () {
-      const button = document.getElementById("submit-button");
-      button.disabled = true;
-      button.textContent = "Preparando download…";
-    });
-  </script>
-</body>
-</html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1020">
+<meta name="description" content="Baixe vídeos de plataformas compatíveis em poucos passos."><title>BaixaVídeo — baixe sem complicação</title>
+<style>
+:root{color-scheme:dark;--bg:#090d19;--panel:#121a2e;--text:#f4f7ff;--muted:#9aa8c4;--line:rgba(164,180,220,.17);--accent:#8b7cff;--teal:#54d7d0}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 15% 8%,rgba(100,87,255,.2),transparent 35%),radial-gradient(ellipse at 85% 20%,rgba(36,208,197,.11),transparent 32%),var(--bg)}.shell{width:min(1040px,calc(100% - 32px));margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;padding:23px 0}.brand{display:flex;align-items:center;gap:11px;color:var(--text);text-decoration:none;font-size:1.15rem;font-weight:850;letter-spacing:-.04em}.logo{display:grid;place-items:center;width:39px;height:39px;border-radius:13px;background:linear-gradient(135deg,#8b7cff,#5b9cff);box-shadow:0 8px 26px #7067ff40}.logo svg{width:21px}.pill{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:8px 12px;color:#c6d2e9;font-size:.82rem;background:#ffffff06}.dot{width:7px;height:7px;border-radius:50%;background:#77e0b5;box-shadow:0 0 0 4px #77e0b51a}.hero{text-align:center;padding:52px 0 32px}.eyebrow{color:#c5beff;text-transform:uppercase;letter-spacing:.13em;font-size:.78rem;font-weight:800}.hero h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:1.04;letter-spacing:-.065em;margin:17px 0 14px}.gradient{color:transparent;background:linear-gradient(100deg,#b6aaff,#71d8ed);background-clip:text;-webkit-background-clip:text}.hero p{max-width:580px;margin:auto;color:var(--muted);font-size:1.08rem}.card{max-width:780px;margin:auto;padding:26px;border:1px solid #adbbe630;border-radius:26px;background:linear-gradient(145deg,#182139ed,#0e1425f0);box-shadow:0 28px 90px #0005}.heading{display:flex;align-items:center;gap:12px;margin-bottom:22px}.heading-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;color:var(--teal);background:#54d7d00f;border:1px solid #54d7d029}.heading-icon svg{width:22px}.heading h2{font-size:1.05rem;margin:0}.heading p{font-size:.88rem;color:var(--muted);margin:3px 0 0}.label{display:block;text-align:left;margin:0 0 9px;font-size:.88rem;font-weight:700;color:#dbe4f7}.urlbox{display:flex;align-items:center;gap:9px;padding:7px;border:1px solid #aab9e038;border-radius:16px;background:#05091375;transition:.2s}.urlbox:focus-within{border-color:#8b7cff;box-shadow:0 0 0 4px #8b7cff20}.urlbox>svg{width:21px;margin-left:8px;color:#8e9dbb;flex-shrink:0}input[type=url]{min-width:0;flex:1;padding:12px 2px;color:var(--text);background:transparent;border:0;outline:0;font:inherit}input::placeholder{color:#74819d}.paste{padding:10px 13px;border:1px solid var(--line);border-radius:11px;color:#dbe4f7;background:#ffffff0a;font:inherit;font-size:.85rem;cursor:pointer}.paste:hover{background:#ffffff16}.options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 20px}select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:#10172a;color:var(--text);font:inherit;outline:0}select:focus{border-color:var(--accent)}.submit{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border:0;border-radius:14px;color:white;background:linear-gradient(100deg,#7869f6,#5c8dff);font:inherit;font-weight:800;cursor:pointer;box-shadow:0 10px 26px #6868ff3b;transition:transform .18s,filter .18s}.submit:hover{transform:translateY(-1px);filter:brightness(1.08)}.submit svg{width:19px}.note{display:flex;justify-content:center;align-items:center;gap:7px;margin:15px 0 0;color:#8f9db8;font-size:.8rem}.note svg{width:14px;color:#77e0b5}.result{margin-top:16px;padding:13px 15px;border-radius:13px;text-align:left;overflow-wrap:anywhere;color:#ffe2e5;border:1px solid #ff8e9a40;background:#ff8e9a14}.platforms{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:9px;margin:29px 0 0;color:#8391ad;font-size:.84rem}.platform{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border:1px solid var(--line);border-radius:99px;color:#d7e0f4;background:#ffffff06}.platform svg{width:16px;height:16px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:39px auto 0}.feature{padding:20px;border:1px solid var(--line);border-radius:18px;background:#10172999}.feature-icon{display:grid;place-items:center;width:37px;height:37px;margin-bottom:13px;border-radius:12px;color:#b7adff;background:#8b7cff1c}.feature-icon svg{width:19px}.feature h3{font-size:.97rem;margin:0 0 6px}.feature p{font-size:.86rem;color:var(--muted);margin:0}footer{display:flex;justify-content:space-between;gap:16px;padding:28px 0 24px;margin-top:25px;border-top:1px solid #a4b4dc1a;color:#73819d;font-size:.8rem}footer p{margin:0}@media(max-width:640px){.shell{width:calc(100% - 24px)}.topbar{padding:17px 0}.hero{padding:40px 0 25px}.card{padding:18px;border-radius:22px}.urlbox{flex-wrap:wrap}.urlbox input{flex:1}.paste{width:100%}.features{grid-template-columns:1fr;gap:10px;margin-top:25px}.feature{display:flex;gap:13px;align-items:flex-start;padding:16px}.feature-icon{flex-shrink:0;margin:0}footer{flex-direction:column;text-align:center}.pill{font-size:.73rem}}@media(max-width:390px){.options{grid-template-columns:1fr}.pill span:last-child{display:none}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body><div class="shell">
+<header class="topbar"><a class="brand" href="/" aria-label="BaixaVídeo página inicial"><span class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l10-6.5-10-6.5Z" fill="white"/></svg></span><span>Baixa<span style="color:#a99fff">Vídeo</span></span></a><div class="pill"><span class="dot"></span><span>Simples e direto</span></div></header>
+<main><section class="hero"><div class="eyebrow">Seus vídeos, do seu jeito</div><h1>Salve seus vídeos.<br><span class="gradient">Sem complicação.</span></h1><p>Cole o link, escolha a qualidade e pronto. Uma experiência simples para baixar vídeos de plataformas compatíveis.</p></section>
+<section class="card" aria-labelledby="download-title"><div class="heading"><div class="heading-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></div><div><h2 id="download-title">Comece seu download</h2><p>Adicione o endereço do vídeo abaixo.</p></div></div>
+<form method="POST" action="/" id="download-form"><label class="label" for="video-url">Link do vídeo</label><div class="urlbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13.5a4.5 4.5 0 0 0 6.36 0l3-3A4.5 4.5 0 0 0 13 4.14l-1.72 1.72"/><path d="M14 10.5a4.5 4.5 0 0 0-6.36 0l-3 3A4.5 4.5 0 0 0 11 19.86l1.72-1.72"/></svg><input id="video-url" type="url" name="url" placeholder="https://www.youtube.com/watch?v=..." required autocomplete="url" inputmode="url"><button class="paste" type="button" id="paste-button">Colar link</button></div>
+<div class="options"><div><label class="label" for="quality">Qualidade do vídeo</label><select id="quality" name="quality"><option value="360">360p — Econômica</option><option value="480">480p — Padrão</option><option value="720" selected>720p — HD</option><option value="1080">1080p — Full HD</option></select></div><div><label class="label" for="output-format">Formato</label><select id="output-format" name="output_format"><option value="mp4" selected>MP4 — Vídeo</option></select></div></div>
+<button class="submit" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg>Baixar vídeo</button><p class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Use links de vídeos públicos e respeite os direitos dos criadores.</p></form>
+{% if result %}<div class="result" role="alert">{{ result }}</div>{% endif %}</section>
+<div class="platforms"><span>Compatível com</span><span class="platform"><svg viewBox="0 0 24 24"><path fill="#ff4545" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8Z"/><path fill="white" d="m9.6 15.4 6.2-3.4-6.2-3.4v6.8Z"/></svg>YouTube</span><span class="platform"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 13.8 4.8 22H1.6l7.3-8.4L.8 2h6.5l4.5 7.5L18.9 2Zm-1.1 18h1.7L6.3 3.9H4.5L17.8 20Z"/></svg>X / Twitter</span></div>
+<section class="features" aria-label="Vantagens"><article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg></div><div><h3>Sem complicação</h3><p>Um formulário claro e poucos passos para iniciar.</p></div></article><article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5m8 0h5M3 15h5m8 0h5"/></svg></div><div><h3>Escolha a qualidade</h3><p>Selecione a resolução desejada quando estiver disponível.</p></div></article><article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9Z"/></svg></div><div><h3>Formato MP4</h3><p>Prático para assistir em computadores e celulares.</p></div></article></section></main>
+<footer><p>© <span id="year"></span> BaixaVídeo</p><p>Baixe somente conteúdo que você tem autorização para salvar.</p></footer></div>
+<script>document.getElementById('year').textContent=new Date().getFullYear();document.getElementById('paste-button').addEventListener('click',async()=>{const input=document.getElementById('video-url');try{if(!navigator.clipboard?.readText){input.focus();input.placeholder='Cole o link usando Ctrl + V';return}const value=await navigator.clipboard.readText();if(value)input.value=value.trim();input.focus()}catch(e){input.focus();input.placeholder='Use Ctrl + V para colar o link'}});</script>
+</body></html>
