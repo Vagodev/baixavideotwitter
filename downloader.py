@@ -83,11 +83,18 @@ def download_video(url: str, quality: str = "720", output_format: str = "mp4") -
         "noplaylist": True,
         "restrictfilenames": True,
         "windowsfilenames": True,
-        "quiet": True,
-        "no_warnings": True,
+        
         "socket_timeout": 20,
         "retries": 2,
         "fragment_retries": 2,
+        "quiet": False,
+        "no_warnings": False,
+        "verbose": True,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["web", "mweb", "tv"]
+            }
+        },
     }
 
     try:
