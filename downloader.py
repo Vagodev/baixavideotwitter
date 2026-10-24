@@ -92,22 +92,26 @@ def download_video(url: str, quality: str = "720", output_format: str = "mp4") -
         "verbose": True,
         "remote_components": ["ejs:npm"],
         "js_runtimes": {"deno": {}},
+        
+"
         "extractor_args": {
-    "youtube": {
-        "player_client": ["mweb", "tv", "web_safari"]
-    },
-    "youtubepot-bgutilscript": {
-    "server_home": os.path.join(
-        os.getcwd(),
-        "bgutil-ytdlp-pot-provider",
-        "server"
-    )
-},
-"youtubepot-bgutilhttp": {
-    "base_url": "http://127.0.0.1:4416"
-}
-},
+            "youtube": {
+                "player_client": ["mweb", "tv", "web_safari"]
+            },
+            "youtubepot-bgutilscript": {
+                "server_home": os.path.join(
+                    os.getcwd(),
+                    "bgutil-ytdlp-pot-provider",
+                    "server"
+                )
+            },
+            "youtubepot-bgutilhttp": {
+                "base_url": "http://127.0.0.1:4416"
+            }
+        },
     }
+
+
 
     try:
         with yt_dlp.YoutubeDL(opts) as ydl:
