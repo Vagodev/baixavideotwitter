@@ -90,6 +90,8 @@ def download_video(url: str, quality: str = "720", output_format: str = "mp4") -
         "quiet": False,
         "no_warnings": False,
         "verbose": True,
+        "remote_components": ["ejs:npm"],
+        "js_runtimes": {"deno": {}},
         "extractor_args": {
             "youtube": {
                 "player_client": ["web", "mweb", "tv"]
