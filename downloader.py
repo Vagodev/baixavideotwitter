@@ -93,10 +93,17 @@ def download_video(url: str, quality: str = "720", output_format: str = "mp4") -
         "remote_components": ["ejs:npm"],
         "js_runtimes": {"deno": {}},
         "extractor_args": {
-            "youtube": {
-                "player_client": ["web", "mweb", "tv"]
-            }
-        },
+    "youtube": {
+        "player_client": ["web", "mweb", "tv"]
+    },
+    "youtubepot-bgutilscript": {
+        "server_home": os.path.join(
+            os.getcwd(),
+            "bgutil-ytdlp-pot-provider",
+            "server"
+        )
+    }
+},
     }
 
     try:
