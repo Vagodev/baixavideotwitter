@@ -1,26 +1,62 @@
 # Ponto de entrada da aplicação Flask
-
-from flask import Flask, request, render_template, send_file, send_from_directory
-from downloader import download_twitter_video
 import os
+from flask import Flask, request, render_template, send_file
+from downloader import download_video, validate_video_url
 
 app = Flask(__name__)
+
+QUALITY_OPTIONS = [
+    {"value": "best", "label": "Melhor disponível"},
+    {"value": "2160", "label": "2160p (4K)"},
+    {"value": "1440", "label": "1440p (2K / QHD)"},
+    {"value": "1080", "label": "1080p (Full HD)"},
+    {"value": "720", "label": "720p (HD)"},
+    {"value": "480", "label": "480p (SD)"},
+    {"value": "360", "label": "360p"},
+]
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        url = request.form.get("url")
-        try:
-            output_file = download_twitter_video(url)
-            return send_file(output_file, as_attachment=True)
-        except Exception as e:
-            return render_template("index.html", result=f"Erro: {e}")
-    return render_template("index.html", result=None)
+        url = (request.form.get("url") or "").strip()
+        quality = (request.form.get("quality") or "").strip()
+        output_format = (request.form.get("format") or "mp4").strip().lower()
 
-# Rota para servir o ads.txt (fora da função index)
-@app.route('/ads.txt')
-def ads():
-    return send_from_directory('.', 'ads.txt')
+        try:
+            validate_video_url(url)
+            if quality not in {"best", "2160", "1440", "1080", "720", "480", "360"}:
+                raise ValueError("Escolha uma resolução antes de baixar.")
+            if output_format != "mp4":
+                raise ValueError("Formato inválido. Nesta versão, selecione MP4.")
+
+            output_file = download_video(url, quality=quality, output_format=output_format)
+            return send_file(
+                output_file,
+                as_attachment=True,
+                download_name=os.path.basename(output_file),
+                mimetype="video/mp4",
+            )
+        except Exception as exc:
+            app.logger.exception("Falha ao processar download")
+            return render_template(
+                "index.html",
+                result=f"Não foi possível baixar o vídeo: {exc}",
+                qualities=QUALITY_OPTIONS,
+                selected_quality=quality if quality in {"best", "2160", "1440", "1080", "720", "480", "360"} else "",
+                url=url,
+            ), 400
+
+    return render_template(
+        "index.html",
+        result=None,
+        qualities=QUALITY_OPTIONS,
+        selected_quality="",
+        url="",
+    )
+
+@app.route("/health")
+def health():
+    return {"status": "ok"}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
