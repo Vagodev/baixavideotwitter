@@ -13,10 +13,18 @@ import yt_dlp
 
 DOWNLOAD_DIR = os.environ.get("DOWNLOAD_DIR", "downloads")
 ALLOWED_HOSTS = {
-    "youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be",
-    "youtube-nocookie.com", "www.youtube-nocookie.com",
-    "twitter.com", "www.twitter.com", "mobile.twitter.com",
-    "x.com", "www.x.com", "mobile.x.com",
+     "youtube.com",
+    "www.youtube.com",
+    "m.youtube.com",
+    "youtu.be",
+    "youtube-nocookie.com",
+    "www.youtube-nocookie.com",
+    "twitter.com",
+    "www.twitter.com",
+    "mobile.twitter.com",
+    "x.com",
+    "www.x.com",
+    "mobile.x.com",,
 }
 
 def validate_video_url(url: str) -> str:
