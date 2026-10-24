@@ -24,7 +24,7 @@ ALLOWED_HOSTS = {
     "mobile.twitter.com",
     "x.com",
     "www.x.com",
-    "mobile.x.com",,
+    "mobile.x.com",
 }
 
 def validate_video_url(url: str) -> str:
