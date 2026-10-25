@@ -106,8 +106,8 @@ def download_video(url: str, quality: str = "720", output_format: str = "mp4") -
                 )
             },
             "youtubepot-bgutilhttp": {
-            "base_url": "http://127.0.0.1:4416",
-            "disable_innertube": "1"
+            "base_url": "http://127.0.0.1:4416"
+            
             },
         },
     }
