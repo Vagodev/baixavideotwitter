@@ -1,5 +1,7 @@
 # Ponto de entrada da aplicação Flask
 import os
+import urllib.request
+import urllib.error
 from flask import Flask, request, render_template, send_file
 from downloader import download_video, validate_video_url
 
@@ -53,6 +55,30 @@ def index():
         selected_quality="",
         url="",
     )
+
+
+@app.route("/diagnostico")
+def diagnostico():
+    url = "http://127.0.0.1:4416/ping"
+
+    try:
+        with urllib.request.urlopen(url, timeout=5) as response:
+            body = response.read().decode("utf-8", errors="replace")
+
+            return {
+                "bgutil_status": "respondendo",
+                "http_status": response.status,
+                "resposta": body[:500],
+            }, 200
+
+    except Exception as exc:
+        app.logger.exception("Falha ao consultar o servidor bgutil")
+
+        return {
+            "bgutil_status": "falha",
+            "erro": str(exc),
+        }, 503
+
 
 @app.route("/health")
 def health():
