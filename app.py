@@ -1,11 +1,15 @@
-# Ponto de entrada da aplicação Flask
+ Ponto de entrada da aplicação Flask
 import os
 import urllib.request
-import urllib.error
+
 from flask import Flask, request, render_template, send_file
+
 from downloader import download_video, validate_video_url
 
+
 app = Flask(__name__)
+
+QUALITY_VALUES = {"best", "2160", "1440", "1080", "720", "480", "360"}
 
 QUALITY_OPTIONS = [
     {"value": "best", "label": "Melhor disponível"},
@@ -17,6 +21,29 @@ QUALITY_OPTIONS = [
     {"value": "360", "label": "360p"},
 ]
 
+
+def _user_friendly_error(exc: Exception) -> str:
+    """Converte falhas comuns do YouTube em instruções úteis sem expor detalhes."""
+    message = str(exc)
+    lowered = message.lower()
+
+    if "sign in to confirm you're not a bot" in lowered or "login_required" in lowered:
+        return (
+            "O YouTube exigiu autenticação para este download. Configure "
+            "YOUTUBE_COOKIES_B64 no Render com cookies recentes do YouTube "
+            "no formato Netscape/Base64 e tente novamente."
+        )
+
+    if "http error 429" in lowered or "too many requests" in lowered:
+        return (
+            "O YouTube limitou temporariamente as requisições deste servidor "
+            "(HTTP 429). Aguarde antes de tentar novamente. Se persistir, "
+            "o IP do servidor pode estar sujeito a bloqueio do YouTube."
+        )
+
+    return f"Não foi possível baixar o vídeo: {message}"
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -26,25 +53,33 @@ def index():
 
         try:
             validate_video_url(url)
-            if quality not in {"best", "2160", "1440", "1080", "720", "480", "360"}:
+
+            if quality not in QUALITY_VALUES:
                 raise ValueError("Escolha uma resolução antes de baixar.")
+
             if output_format != "mp4":
                 raise ValueError("Formato inválido. Nesta versão, selecione MP4.")
 
-            output_file = download_video(url, quality=quality, output_format=output_format)
+            output_file = download_video(
+                url,
+                quality=quality,
+                output_format=output_format,
+            )
+
             return send_file(
                 output_file,
                 as_attachment=True,
                 download_name=os.path.basename(output_file),
                 mimetype="video/mp4",
             )
+
         except Exception as exc:
             app.logger.exception("Falha ao processar download")
             return render_template(
                 "index.html",
-                result=f"Não foi possível baixar o vídeo: {exc}",
+                result=_user_friendly_error(exc),
                 qualities=QUALITY_OPTIONS,
-                selected_quality=quality if quality in {"best", "2160", "1440", "1080", "720", "480", "360"} else "",
+                selected_quality=quality if quality in QUALITY_VALUES else "",
                 url=url,
             ), 400
 
@@ -64,25 +99,30 @@ def diagnostico():
     try:
         with urllib.request.urlopen(url, timeout=5) as response:
             body = response.read().decode("utf-8", errors="replace")
-
             return {
                 "bgutil_status": "respondendo",
                 "http_status": response.status,
                 "resposta": body[:500],
+                "youtube_cookies_configurados": bool(
+                    os.environ.get("YOUTUBE_COOKIES_B64", "").strip()
+                ),
             }, 200
 
     except Exception as exc:
         app.logger.exception("Falha ao consultar o servidor bgutil")
-
         return {
             "bgutil_status": "falha",
             "erro": str(exc),
+            "youtube_cookies_configurados": bool(
+                os.environ.get("YOUTUBE_COOKIES_B64", "").strip()
+            ),
         }, 503
 
 
 @app.route("/health")
 def health():
     return {"status": "ok"}
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
