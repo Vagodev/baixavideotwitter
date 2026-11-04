@@ -1,4 +1,4 @@
- Ponto de entrada da aplicação Flask
+ """ Ponto de entrada da aplicação Flask """
 import os
 import urllib.request
 
