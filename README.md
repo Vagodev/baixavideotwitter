@@ -13,4 +13,4 @@ Aplicativo **Flask** para baixar vídeos do Twitter, hospedado gratuitamente no 
 Simples, rápido e acessível via navegador.
 
 
- **YOUTUBE ESTÁ COM PROBLEMAS**
+ **YOUTUBE ESTÁ COM PROBLEMAS.**
